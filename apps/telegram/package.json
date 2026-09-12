@@ -7,7 +7,8 @@
     "dev": "node --env-file=../../.env --import tsx --watch src/bot.ts",
     "start": "node dist/bot.js",
     "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "tsx src/bot.test.ts"
   },
   "dependencies": {
     "@relay/contract": "*",
