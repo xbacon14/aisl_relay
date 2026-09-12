@@ -10,9 +10,9 @@ Docs: [CONTRACT.md](CONTRACT.md) · [docs/handoff.md](docs/handoff.md) · [docs/
 
 ```
 packages/contract   shared types, zod schemas, typed HTTP client, in-memory mock server, contract test
-apps/backend        Express + Postgres. Source of truth.                      (owner: ___ )
-apps/telegram       grammY bot + OpenRouter extraction + confirmation flow.   (owner: ___ )
-apps/alexa          ASK SDK skill: Launch / NextTask / Done / WhatsLeft.      (owner: ___ )
+apps/backend        Express + Postgres. Source of truth.                      (owner: @xbacon14 Italo Golin)
+apps/telegram       grammY bot + OpenRouter extraction + confirmation flow.   (owner: @Ernestolop Ernesto Deggeller)
+apps/alexa          ASK SDK skill: Launch / NextTask / Done / WhatsLeft.      (owner: @256javy Javier Villalba)
 ```
 
 Stack: Node ≥ 20, TypeScript, Express, PostgreSQL, npm workspaces. Everything is ESM.

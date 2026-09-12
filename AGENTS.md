@@ -23,9 +23,9 @@ Therefore:
 
 | Dir | Owner | Others may |
 | --- | --- | --- |
-| `apps/backend` | backend person | read |
-| `apps/telegram` | telegram person | read |
-| `apps/alexa` | alexa person | read |
+| `apps/backend` | @xbacon14 (Italo) | read |
+| `apps/telegram` | @Ernestolop (Ernesto) | read |
+| `apps/alexa` | @256javy (Javier) | read |
 | `packages/contract` | shared | change only with a message to the team + `npm run verify` green |
 
 ## Stack (fixed, do not revisit)
