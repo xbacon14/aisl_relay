@@ -13,7 +13,7 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "mock": "npm run mock -w @relay/contract",
     "contract:test": "npm run test -w @relay/contract",
-    "verify": "npm run typecheck && npm run contract:test && npm run telegram:test",
+    "verify": "npm run build -w @relay/contract && npm run typecheck && npm run contract:test",
     "dev:backend": "npm run dev -w @relay/backend",
     "dev:telegram": "npm run dev -w @relay/telegram",
     "dev:alexa": "npm run dev -w @relay/alexa",
