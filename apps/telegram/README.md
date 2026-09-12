@@ -15,3 +15,38 @@
 `TELEGRAM_BOT_TOKEN`, `OPENROUTER_API_KEY`, `MODEL`, `RELAY_API_URL`, `RELAY_API_KEY`.
 
 Create the bot with @BotFather. Long polling is enough for the demo; no webhook needed.
+
+## Commands (deterministic — they never touch the LLM)
+
+`/status` `/tasks` `/next` `/done` `/reset` `/health` `/cancel`
+
+These are the escape hatch: if OpenRouter is slow or down mid-demo, every scene
+except the initial dictation can still be driven from these. Register them in
+BotFather so they show in the menu:
+
+```
+status - How the afternoon is going
+tasks - The full list
+next - What's next
+done - Complete the next task
+reset - Clear the afternoon
+cancel - Discard a pending proposal
+```
+
+## Reliability notes
+
+- The OpenRouter call has a 12 s timeout and one retry (the retry also drops
+  `response_format`, which some free providers reject).
+- Model output is unwrapped from markdown fences / prose before `JSON.parse`;
+  `AgentCommandSchema` is still the only gate.
+- `COMPLETE_TASK` carries the *title* the adult used; it is resolved against
+  `GET /api/tasks` and falls back to `POST /api/tasks/next/complete`. The model
+  never sees or invents an id.
+- An unrecognized reply to a proposal re-asks instead of discarding it; only an
+  explicit no, the Cancel button or `/cancel` drops it. Proposals expire after
+  10 minutes.
+- A failed create keeps the proposal so "yes" can be retried.
+- One message at a time per chat; startup logs a `GET /api/health` result.
+
+Pure logic lives in `src/parse.ts` and is covered by `src/bot.test.ts`
+(`npm run verify` runs it).
