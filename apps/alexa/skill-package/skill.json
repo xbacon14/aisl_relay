@@ -1,0 +1,32 @@
+{
+  "manifest": {
+    "manifestVersion": "1.0",
+    "publishingInformation": {
+      "locales": {
+        "en-US": {
+          "name": "My Afternoon",
+          "summary": "Relay: the household afternoon routine, one task at a time.",
+          "description": "Guides a child through the afternoon routine a parent planned over Telegram. Say what's next, I'm done, or what's left.",
+          "examplePhrases": ["Alexa, open my afternoon", "I'm done", "what's left"],
+          "keywords": ["routine", "household", "kids"]
+        }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "Create tasks via the Telegram bot or POST /api/tasks/batch, then open the skill.",
+      "category": "ORGANIZERS_AND_ASSISTANTS",
+      "distributionCountries": []
+    },
+    "apis": {
+      "custom": {
+        "endpoint": { "uri": "arn:aws:lambda:REGION:ACCOUNT:function:relay-alexa" }
+      }
+    },
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "usesPersonalInfo": false,
+      "isChildDirected": false,
+      "isExportCompliant": true,
+      "containsAds": false
+    }
+  }
+}

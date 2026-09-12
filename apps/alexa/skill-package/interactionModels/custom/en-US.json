@@ -1,0 +1,58 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "my afternoon",
+      "intents": [
+        { "name": "AMAZON.CancelIntent", "samples": [] },
+        { "name": "AMAZON.HelpIntent", "samples": [] },
+        { "name": "AMAZON.StopIntent", "samples": [] },
+        { "name": "AMAZON.NavigateHomeIntent", "samples": [] },
+        { "name": "AMAZON.FallbackIntent", "samples": [] },
+        {
+          "name": "NextTaskIntent",
+          "slots": [],
+          "samples": [
+            "what's next",
+            "what is next",
+            "what should I do next",
+            "what do I do now",
+            "what's first",
+            "next task",
+            "next"
+          ]
+        },
+        {
+          "name": "DoneIntent",
+          "slots": [],
+          "samples": [
+            "I'm done",
+            "I am done",
+            "I finished",
+            "I'm finished",
+            "done",
+            "finished",
+            "I did it",
+            "mark it done",
+            "that one is done",
+            "I completed it",
+            "all done with that"
+          ]
+        },
+        {
+          "name": "WhatsLeftIntent",
+          "slots": [],
+          "samples": [
+            "what's left",
+            "what is left",
+            "what do I still have to do",
+            "what else do I have to do",
+            "what's remaining",
+            "how many things are left",
+            "what else"
+          ]
+        }
+      ],
+      "types": []
+    }
+  }
+}
