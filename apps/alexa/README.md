@@ -15,7 +15,9 @@
 | File | What |
 | --- | --- |
 | `src/handlers.ts` | all intent handlers + `skillBuilder`. Hosting-agnostic. |
-| `src/lambda.ts` | AWS Lambda entrypoint (`exports.handler`) |
+| `src/lambda.ts` | AWS Lambda / Alexa-hosted entrypoint (`exports.handler`) |
+| `src/config.ts` | build-time baked `RELAY_API_URL`/`RELAY_API_KEY` (Alexa-hosted has no env vars) |
+| `scripts/build-hosted.sh` | `npm run hosted` — builds the Alexa-hosted repo layout into `dist/hosted/` |
 | `src/local.ts` | express `POST /alexa` for tunnel-based testing (`npm run dev:alexa`) |
 | `src/smoke.ts` | full voice flow against mock/real backend (`npm run smoke -w @relay/alexa`) |
 | `skill-package/` | `skill.json` manifest + `interactionModels/custom/en-US.json` (invocation, intents, utterances) |
@@ -28,18 +30,38 @@ RELAY_API_URL=http://localhost:3000 npm run smoke -w @relay/alexa   # terminal 2
 ```
 Prints every step (`✓`/`✗`) and exits 1 on mismatch. Point `RELAY_API_URL` at the deployed backend to smoke the real thing.
 
-## Deploy (needs an Amazon developer account — pending `ask` login)
+## Deploy
 
-**Option A — Alexa Developer Console + AWS Lambda (no ASK CLI needed):**
-1. `npm run bundle -w @relay/alexa` → `apps/alexa/dist/relay-alexa-lambda.zip` (single CJS file, deps inlined).
+### Option A — Alexa-hosted (recommended for the demo: free, no AWS account)
+
+Amazon runs the Lambda, S3 and DynamoDB for you. Needs only an Amazon developer account.
+
+1. **Create the skill.** developer.amazon.com/alexa/console/ask → *Create Skill* → name "My Afternoon", locale en-US, model **Custom**, method **Alexa-hosted (Node.js)**. Wait for provisioning.
+2. **Get the repo.** Skill → *Code* tab → copy the git URL, or in the *Code* tab use "Download the skill package". With the ASK CLI: `ask init --hosted-skill-id <id>` clones it.
+3. **Build our payload.**
+   ```bash
+   RELAY_API_URL=https://<public-backend> RELAY_API_KEY=<key> npm run hosted -w @relay/alexa
+   ```
+   → `dist/hosted/` containing `lambda/index.js` (single CJS bundle, zero deps) + `lambda/package.json` + `skill-package/`.
+4. **Push.** Copy `dist/hosted/lambda/` and `dist/hosted/skill-package/` over the clone's, then `git add -A && git commit -m "relay" && git push`. The push *is* the deploy; the console shows build status.
+5. **Build the model.** *Build* tab → the pushed `interactionModels/custom/en-US.json` is already there → *Build Model*.
+6. **Test.** *Test* tab → enable Development → "open my afternoon". Any Echo on the same Amazon account picks it up automatically.
+
+**Gotchas:**
+- Hosted skills have **no env-var editor**, so `RELAY_API_URL`/`RELAY_API_KEY` are baked into the bundle at step 3 (`src/config.ts` + esbuild `--define`). Backend URL changed? Re-run step 3 and push again.
+- The backend must be **publicly reachable over HTTPS** — `localhost` will not work. Tunnel it (ngrok/cloudflared) or deploy it.
+- The hosted manifest must not pin a Lambda ARN; the build script strips it (`apis.custom: {}`).
+- Logs: *Code* tab → CloudWatch link, or `ask smapi` — our handlers log `[relay alexa]` on every backend error.
+
+### Option B — Your own AWS Lambda
+
+1. `npm run bundle -w @relay/alexa` → `dist/relay-alexa-lambda.zip`.
 2. AWS Lambda → create function, Node 20, upload zip, handler `index.handler`, env `RELAY_API_URL`, `RELAY_API_KEY`. Timeout 8 s.
-3. Add trigger "Alexa Skills Kit" (skill id verification can be off for the hackathon).
-4. developer.amazon.com/alexa → Create skill "My Afternoon", Custom, "Provision your own". In *JSON Editor* paste `skill-package/interactionModels/custom/en-US.json`, build model. Endpoint → Lambda ARN.
-5. Test tab → "open my afternoon". Echo Dot on the same Amazon account picks it up automatically (dev mode).
-
-**Option B — ASK CLI once authenticated:** `ask init` in `apps/alexa`, point `skill-package/skill.json` endpoint at the Lambda ARN, `ask deploy`.
+3. Add trigger "Alexa Skills Kit".
+4. Create the skill with **"Provision your own"**, paste the interaction model in the JSON Editor, build, point Endpoint at the Lambda ARN.
 
 Keep every backend call under ~5 s (`RelayClient` default timeout). Alexa cuts the response at 8 s.
+
 
 ## Env
 `RELAY_API_URL`, `RELAY_API_KEY`. Local endpoint: `ALEXA_PORT` (default 3978).

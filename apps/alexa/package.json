@@ -8,7 +8,8 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "smoke": "tsx src/smoke.ts",
-    "bundle": "esbuild src/lambda.ts --bundle --platform=node --target=node20 --format=cjs --outfile=dist/lambda/index.js && cd dist/lambda && rm -f ../relay-alexa-lambda.zip && zip -q ../relay-alexa-lambda.zip index.js && echo built dist/relay-alexa-lambda.zip"
+    "bundle": "esbuild src/lambda.ts --bundle --platform=node --target=node20 --format=cjs --outfile=dist/lambda/index.js && cd dist/lambda && rm -f ../relay-alexa-lambda.zip && zip -q ../relay-alexa-lambda.zip index.js && echo built dist/relay-alexa-lambda.zip",
+    "hosted": "bash scripts/build-hosted.sh"
   },
   "dependencies": {
     "@relay/contract": "*",
