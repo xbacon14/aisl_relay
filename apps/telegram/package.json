@@ -1,0 +1,17 @@
+{
+  "name": "@relay/telegram",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/bot.ts",
+    "start": "node dist/bot.js",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@relay/contract": "*",
+    "grammy": "^1.30.0",
+    "zod": "^3.23.8"
+  }
+}

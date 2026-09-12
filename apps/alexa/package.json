@@ -1,0 +1,16 @@
+{
+  "name": "@relay/alexa",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/local.ts",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@relay/contract": "*",
+    "ask-sdk-core": "^2.14.0",
+    "ask-sdk-model": "^1.86.0"
+  }
+}
