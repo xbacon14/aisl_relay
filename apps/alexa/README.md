@@ -65,3 +65,15 @@ Keep every backend call under ~5 s (`RelayClient` default timeout). Alexa cuts t
 
 ## Env
 `RELAY_API_URL`, `RELAY_API_KEY`. Local endpoint: `ALEXA_PORT` (default 3978).
+
+## LIVE SETUP (what actually works — 2026-09-12)
+
+Skill **My Afternoon** exists in Javier's Amazon dev account: `amzn1.ask.skill.1e15ef82-5fa9-4eca-a2b3-3ba2db0684f6`, en-US, enabled for Development.
+Endpoint = ngrok → `local.ts` on this laptop (`sslCertificateType: Wildcard`, path `/alexa`). Alexa-hosted failed to provision; Cloudflare tunnel and SMAPI simulator both misbehave — ignore them, the console Test tab and real Echo work.
+
+Start order (3 terminals):
+```bash
+RELAY_API_URL=<italo-backend or http://localhost:3000 mock> RELAY_API_KEY=<key> npm run dev:alexa   # port 3978
+ngrok http --url=bodacious-deftly-passover.ngrok-free.dev 3978   # if the URL changes: update endpoint in console Build → Endpoint
+```
+Echo Dot must be set to **English (US)** (Alexa app → Devices → Echo → Language). Then: "Alexa, open my afternoon" → "I'm done" → "what's left".
