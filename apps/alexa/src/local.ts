@@ -13,6 +13,21 @@ import { skillBuilder } from "./handlers.js";
 const skill = skillBuilder.create();
 const app = express();
 app.use(express.json());
+// Dev proxy: expose the local backend/mock through the same tunnel (/api/* → RELAY_API_URL).
+app.all("/api/*", async (req, res) => {
+  try {
+    const r = await fetch(process.env.RELAY_API_URL + req.originalUrl, {
+      method: req.method,
+      headers: { "content-type": "application/json", ...(req.headers["x-relay-key"] ? { "x-relay-key": String(req.headers["x-relay-key"]) } : {}) },
+      body: ["GET", "HEAD"].includes(req.method) ? undefined : JSON.stringify(req.body ?? {}),
+    });
+    res.status(r.status);
+    const t = await r.text();
+    t ? res.type("json").send(t) : res.end();
+  } catch (err) {
+    res.status(502).json({ error: { code: "INTERNAL_ERROR", message: String(err) } });
+  }
+});
 app.get("/health", (_req, res) => res.json({ ok: true, app: "relay-alexa" }));
 app.post("/alexa", async (req, res) => {
   try {
